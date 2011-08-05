@@ -38,3 +38,6 @@ class Mock(object):
       setattr(self, name, rval)
 
     return rval
+  
+  def __getitem__(self, key):
+    pass

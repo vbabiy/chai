@@ -134,7 +134,11 @@ class Chai(unittest.TestCase):
       if len(mock)==2:
         delattr( mock[0], mock[1] )
       else:
-        setattr( mock[0], mock[1], mock[2] )
+        # We need to handle the special case of setting a classmethod back.
+        if inspect.isclass(mock[2].im_self):
+          setattr( mock[0], mock[1], classmethod(mock[2].im_func))
+        else:
+          setattr( mock[0], mock[1], mock[2] )
     
     # Lastly, if there were any errors, raise them
     if exception:
