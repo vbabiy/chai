@@ -31,4 +31,12 @@ class ExpectationNotSatisfied(ChaiAssertion):
     self._expections = expectations
   
   def __str__(self):
-    return str("\n".join([ str(e) for e in self._expections]))
+    try:
+      return str("\n".join([ str(e) for e in self._expections]))
+    except Exception, e:
+      return str(e)
+
+class UnknownType(Exception):
+  """
+  Raised when the handler can't detect the type.
+  """

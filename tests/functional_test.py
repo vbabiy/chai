@@ -22,29 +22,29 @@ class FunctionalTest(Chai):
 
     assert_raises( UnexpectedCall, lambda: foo.prop )
 
-  def test_properties_using_obj_ref_on_a_class_and_using_get_first(self):
-    class Foo(object):
-      @property
-      def prop(self): return 3
+  # def test_properties_using_obj_ref_on_a_class_and_using_get_first(self):
+  #   class Foo(object):
+  #     @property
+  #     def prop(self): return 3
 
-    expect(Foo.prop).returns('foo')
-    expect(Foo.prop.setter).args(42)
-    expect(Foo.prop.deleter)
+  #   expect(Foo.prop).returns('foo')
+  #   expect(Foo.prop.setter).args(42)
+  #   expect(Foo.prop.deleter)
 
-    assert_equals( 'foo', Foo().prop )
-    Foo().prop = 42
-    del Foo().prop
-    assert_raises( UnexpectedCall, lambda: Foo().prop )
+  #   assert_equals( 'foo', Foo().prop )
+  #   Foo().prop = 42
+  #   del Foo().prop
+  #   assert_raises( UnexpectedCall, lambda: Foo().prop )
 
-  def test_properties_using_obj_ref_on_a_class_and_using_set_first(self):
-    class Foo(object):
-      @property
-      def prop(self): return 3
+  # def test_properties_using_obj_ref_on_a_class_and_using_set_first(self):
+  #   class Foo(object):
+  #     @property
+  #     def prop(self): return 3
 
-    expect(Foo.prop.setter).args(42)
-    expect(Foo.prop).returns('foo')
-    expect(Foo.prop.deleter)
+  #   expect(Foo.prop.setter).args(42)
+  #   expect(Foo.prop).returns('foo')
+  #   expect(Foo.prop.deleter)
 
-    Foo().prop = 42
-    assert_equals( 'foo', Foo().prop )
-    del Foo().prop
+  #   Foo().prop = 42
+  #   assert_equals( 'foo', Foo().prop )
+  #   del Foo().prop

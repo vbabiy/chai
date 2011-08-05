@@ -2,7 +2,6 @@
 An open mocking object.
 '''
 from types import MethodType
-from stub import stub, Stub
 from exception import UnexpectedCall
 
 
@@ -30,7 +29,7 @@ class Mock(object):
     raise UnexpectedCall("on %s : %s : %s" % (self._name, args, kwargs))
 
   def __getattr__(self,name):
-    rval = self.__dict__.get(name)
+    rval = self.__dict__.get(name) # FIXME: this is broken, since we are not suing the mro
 
     if not rval or not isinstance(rval,(Stub,Mock)):
       rval = Mock()
@@ -41,3 +40,6 @@ class Mock(object):
   
   def __getitem__(self, key):
     pass
+
+from chai import Stub
+from handlers import BaseHandler

@@ -254,6 +254,22 @@ class SampleBaseTest(Chai):
     expect(obj.bound_method).args(is_arg(obj)).returns(100)
     assert_equals(obj.bound_method(obj), 100)
 
+  def test_method_wrapper(self):
+    obj = SampleBase()
+    expect(obj.__hash__).returns('hello')
+    assert_equals(obj.__hash__(), 'hello')
+
+    expect(obj, '__hash__').returns('hello')
+    assert_equals(obj.__hash__(), 'hello')
+
+  def test_wrapper_discriptor(self):
+    obj = SampleBase()
+    expect(obj.__str__).returns('hello')
+    assert_equals(obj.__str__(), 'hello')
+
+    expect(obj, '__str__').returns('hello')
+    assert_equals(obj.__str__(), 'hello')
+
 class SampleChildTest(Chai):
 
   def test_stub_base_class_expect_child_classmethod(self):
@@ -261,3 +277,6 @@ class SampleChildTest(Chai):
     expect(SampleChild.a_classmethod)
 
     SampleChild.a_classmethod()
+
+if __name__ == '__main__':
+    unittest.main(failfast=True)

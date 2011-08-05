@@ -13,8 +13,8 @@ import sys
 import inspect
 
 from exception import *
+from stub import stub, Stub
 from mock import Mock
-from stub import stub
 from collections import deque
 from comparators import *
 
@@ -131,18 +131,10 @@ class Chai(unittest.TestCase):
     # twice.
     while len(self._mocks):
       mock = self._mocks.pop()
-      if len(mock)==2:
-        delattr( mock[0], mock[1] )
+      if isinstance(mock, BaseHandler):
+        mock.replace()
       else:
-        # FIXME: this needs to be fixed, and refactored to use the teardown of the 
-        # StubMethod class
-
-        # We need to handle the special case of setting a classmethod back.
-        if hasattr(mock[2], 'im_self'):
-          if inspect.isclass(mock[2].im_self):
-            setattr( mock[0], mock[1], classmethod(mock[2].im_func))
-        else:
-          setattr( mock[0], mock[1], mock[2] )
+        delattr( mock[0], mock[1] )
     
     # Lastly, if there were any errors, raise them
     if exception:
@@ -180,9 +172,13 @@ class Chai(unittest.TestCase):
       
       if hasattr(obj,attr):
         orig = getattr(obj, attr)
-        self._mocks.append( (obj,attr,orig) )
+        handler = Handler.detect(obj, attr)
+        handler.set(rval)
+        self._mocks.append(handler)
         setattr(obj, attr, rval)
       else:
         self._mocks.append( (obj,attr) )
         setattr(obj, attr, rval)
     return rval
+
+from handlers import *

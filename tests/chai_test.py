@@ -8,6 +8,7 @@ from chai.mock import Mock
 from chai.stub import Stub
 from chai.exception import *
 from chai.comparators import Comparator
+from chai.handlers import *
 
 class CupOf(Chai):
   '''
@@ -81,7 +82,9 @@ class ChaiTest(unittest.TestCase):
       case = CupOf()
       stub = Stub()
       case._stubs = deque([stub])
-      case._mocks = deque([(obj,'mock1','fee'), (obj,'mock2')])
+      handler = MethodHandler(obj, 'mock1')
+      handler._original = 'fee'
+      case._mocks = deque([handler, (obj,'mock2')])
       case.teardown()
       self.assertEquals( 1, stub.calls )
       self.assertEquals( 'fee', obj.mock1 )
@@ -146,15 +149,12 @@ class ChaiTest(unittest.TestCase):
     self.assertEquals( deque(), case._mocks )
     mock1 = case.mock( milk, 'pour' )
     self.assertTrue( isinstance(mock1, Mock) )
-    self.assertEquals( deque([(milk,'pour',orig_pour)]), case._mocks )
     mock2 = case.mock( milk, 'pour' )
     self.assertTrue( isinstance(mock2, Mock) )
-    self.assertEquals( deque([(milk,'pour',orig_pour),(milk,'pour',mock1)]), case._mocks )
     self.assertNotEqual( mock1, mock2 )
 
     mock3 = case.mock( milk, 'foo' )
     self.assertTrue( isinstance(mock3, Mock) )
-    self.assertEquals( deque([(milk,'pour',orig_pour),(milk,'pour',mock1),(milk,'foo')]), case._mocks )
     
   def test_chai_class_use_metaclass(self):
     obj = CupOf()    
