@@ -134,9 +134,13 @@ class Chai(unittest.TestCase):
       if len(mock)==2:
         delattr( mock[0], mock[1] )
       else:
+        # FIXME: this needs to be fixed, and refactored to use the teardown of the 
+        # StubMethod class
+
         # We need to handle the special case of setting a classmethod back.
-        if inspect.isclass(mock[2].im_self):
-          setattr( mock[0], mock[1], classmethod(mock[2].im_func))
+        if hasattr(mock[2], 'im_self'):
+          if inspect.isclass(mock[2].im_self):
+            setattr( mock[0], mock[1], classmethod(mock[2].im_func))
         else:
           setattr( mock[0], mock[1], mock[2] )
     
